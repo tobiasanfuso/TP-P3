@@ -7,7 +7,7 @@ function App() {
   
 
   return (
-    <h1>Hola alqui</h1>
+    <h1>ALQUIMAQ</h1>
   )
 }
 
