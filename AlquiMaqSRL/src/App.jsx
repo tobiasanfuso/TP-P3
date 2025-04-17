@@ -14,7 +14,7 @@ function App() {
   const [user,setUser] = useState([])
 
   return (
-    <div className='App'>
+    <div>
       {
       !user.length
       ? <FormLogin setUser = {setUser} />
