@@ -28,7 +28,7 @@ const FormLogin = ({ setUser }) => {
       <div className="d-flex justify-content-center align-items-center bg-dark vh-100 vw-100">
         <div className="card bg-light text-dark p-4 shadow-lg rounded border border-secondary"
           style={{ width: '100%', maxWidth: '700px' }}>
-          <h2 className="text-center mb-4">Iniciar Sesión</h2>
+          {/* <h2 className="text-center mb-4">Iniciar Sesión</h2> */}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Usuario</label>
