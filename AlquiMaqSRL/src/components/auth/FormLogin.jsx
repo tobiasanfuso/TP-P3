@@ -1,6 +1,7 @@
-import React from 'react'
-import { useState } from 'react'
-import './FormLogin.css'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import './FormLogin.css';
 
 
 
@@ -8,6 +9,7 @@ const FormLogin = ({ setUser }) => {
   const [usuario, setUsuario] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -17,8 +19,19 @@ const FormLogin = ({ setUser }) => {
       return
     }
     setError(false)
-    setUser([usuario])
+    
+    let role = "customer";
+    if (usuario.toLowerCase() === "admin") {
+      role = "admin";
+    } else if (usuario.toLowerCase() === "sysadmin"){
+      role = "sysadmin";
+    }
+    
+    setUser({name:usuario, role});
+    
+    navigate("/main");
   }
+
 
   return (
     <div className='bg-dark vh-100 vw-100'>
@@ -28,7 +41,7 @@ const FormLogin = ({ setUser }) => {
       <div className="d-flex justify-content-center align-items-center bg-dark vh-100 vw-100">
         <div className="card bg-light text-dark p-4 shadow-lg rounded border border-secondary"
           style={{ width: '100%', maxWidth: '700px' }}>
-          {/* <h2 className="text-center mb-4">Iniciar Sesión</h2> */}
+          <h2 className="text-center mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Usuario</label>
