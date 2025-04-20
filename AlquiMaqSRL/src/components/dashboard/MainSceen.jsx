@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import NewProduct from '../NewProduct/NewProduct'
 import ProductCard from '../ProductCard/ProductCard'
 import './MainScreen.css'
 
@@ -12,13 +13,13 @@ const MainScreen = ({ user, setUser }) => {
     { id: 1, title: "Agricola 1", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
     { id: 2, title: "Agricola 2", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
     { id: 3, title: "Agricola 3", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
-    { id: 4, title: "Agricola 4", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
-    { id: 5, title: "Agricola 5", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
-    { id: 6, title: "Agricola 6", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" }
   ])
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const currentRole = user.role;
   const currentUser = user.name;
+
 
   //cierre de sesion
   const handleLogout = () => {
@@ -27,14 +28,9 @@ const MainScreen = ({ user, setUser }) => {
   };
 
   //agregar producto (admin y sysadmin)
-  const handleAddProduct = () => {
-    const newProduct = {
-      id: products.length + 1,
-      title: `Agricola ${products.length + 1}`,
-      description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-      image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2"
-    };
-    setProducts([...products, newProduct]);
+  const handleAddProduct = (newProduct) => {
+    const productWhithId = { ...newProduct, id: products.length + 1 };
+    setProducts([...products, productWhithId]);
   }
 
   //si es sysadmin puede cambiar el rol de los demas
@@ -123,9 +119,15 @@ const MainScreen = ({ user, setUser }) => {
       <main className="p-4">
         <h2>Bienvenido {currentUser} a AlquiMaq S.R.L</h2>
         <p>Esta es la pantalla principal del sistema.</p>
-        {currentRole === "admin" || currentRole === "sysadmin" ? (
-          <button className="btn btn-success mb-3" onClick={handleAddProduct}>Agregar Producto</button>
-        ) : null}
+        {(currentRole === "admin" || currentRole === "sysadmin") && (
+          <button className="btn btn-success mb-4" onClick={() => setIsModalOpen(true)}>Agregar Producto</button>
+        )}
+        {isModalOpen && (
+          <NewProduct
+            onSave={handleAddProduct}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
 
         <div className="row">
           {products.map(product => (
