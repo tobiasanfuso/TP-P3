@@ -1,26 +1,44 @@
 import React from 'react'
 import { useState } from 'react'
-import './MainScreen.css'
 import { useNavigate } from 'react-router-dom'
+
+import NewProduct from '../NewProduct/NewProduct'
+import ProductCard from '../ProductCard/ProductCard'
+import './MainScreen.css'
 
 const MainScreen = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // Define el rol actual desde user
-  const currentRole = user.role;
+  const [products, setProducts] = useState([
+    { id: 1, title: "Agricola 1", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
+    { id: 2, title: "Agricola 2", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
+    { id: 3, title: "Agricola 3", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
+  ])
 
-  // Maneja el cierre de sesión
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const currentRole = user.role;
+  const currentUser = user.name;
+
+
+  //cierre de sesion
   const handleLogout = () => {
     setUser(null);
     navigate("/login");
   };
 
-  // Maneja el cambio de rol solo si es sysadmin
+  //agregar producto (admin y sysadmin)
+  const handleAddProduct = (newProduct) => {
+    const productWhithId = { ...newProduct, id: products.length + 1 };
+    setProducts([...products, productWhithId]);
+  }
+
+  //si es sysadmin puede cambiar el rol de los demas
   const handleRoleChange = (e) => {
     setUser({ ...user, role: e.target.value });
   };
 
-  // Construcción del menú de navegación basado en el rol
+  //menu segun el rol
   const navItems = [
     <li className="nav-item" key="home">
       <a className="nav-link" href="#home">Inicio</a>
@@ -99,29 +117,31 @@ const MainScreen = ({ user, setUser }) => {
       </header>
 
       <main className="p-4">
-        <h2>Bienvenido {currentRole} a AlquiMaq S.R.L</h2>
+        <h2>Bienvenido {currentUser} a AlquiMaq S.R.L</h2>
         <p>Esta es la pantalla principal del sistema.</p>
-        {currentRole === "sysadmin" && (
-          <p>Recuerda que puedes cambiar tu rol desde el menú de navegación.</p>
+        {(currentRole === "admin" || currentRole === "sysadmin") && (
+          <button className="btn btn-success mb-4" onClick={() => setIsModalOpen(true)}>Agregar Producto</button>
+        )}
+        {isModalOpen && (
+          <NewProduct
+            onSave={handleAddProduct}
+            onClose={() => setIsModalOpen(false)}
+          />
         )}
 
         <div className="row">
-          <div className="col-md-4">
-            <div className="card mb-3">
-              <img
-                src="https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2"
-                className="card-img-top"
-                alt="Agricola 1"
+          {products.map(product => (
+            <div className="col-md-4 mb-3" key={product.id}>
+              <ProductCard
+                title={product.title}
+                description={product.description}
+                image={product.image}
+                onDetails={() => alert(`Detalles de ${product.title}`)}
               />
-              <div className="card-body">
-                <h5 className="card-title">Agricola 1</h5>
-                <p className="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                </p>
-                <button className="btn btn-primary">+ Detalles</button>
-              </div>
             </div>
-          </div>
+          )
+          )
+          }
         </div>
       </main>
 
