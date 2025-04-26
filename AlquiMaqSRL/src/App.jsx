@@ -1,37 +1,50 @@
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import FormLogin from './components/auth/FormLogin'
 import MainScreen from './components/dashboard/MainSceen'
+import NotFound from './components/dashboard/NotFound';
 
 
 
-const ProtectedRoute = ({ user, element }) => {
-  return user !== null ? element : <Navigate to="/login" />;
-};
 
 function App() {
-  const [user, setUser] = useState(null); // Estado inicial del usuario
+  const ProtectedRoute = ({ isSignedIn }) => {
+    if (!isSignedIn) {
+      return <Navigate to="/login" replace />;
+    }
+    return <Outlet />;
+  }
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const handleLogIn = () => {
+    setLoggedIn(true);
+  }
+  const handleLogOut = () => {
+    setLoggedIn(false);
+    setUser(null);
+  }
 
   return (
-    <Router>
-      <Routes>
-        {/* Ruta de login */}
-        <Route path="/login" element={<FormLogin setUser={setUser} />} />
-
-        {/* Ruta protegida para MainScreen */}
-        <Route
-          path="/main"
-          element={<ProtectedRoute user={user} element={<MainScreen user={user} setUser={setUser} />} />}
-        />
-
-        {/* Redirige cualquier otra ruta al login */}
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Navigate to='/login' />} />
+          <Route path='login' element={<FormLogin onLogin={handleLogIn} setUser={setUser} />} />
+  
+    
+          <Route element={<ProtectedRoute isSignedIn={loggedIn} />}>
+            <Route path='/main' element={<MainScreen user={user} setUser={setUser} logOut={handleLogOut} />} />
+          </Route>
+  
+          <Route path='/*' element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 

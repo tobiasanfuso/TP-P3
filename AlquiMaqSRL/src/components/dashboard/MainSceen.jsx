@@ -6,7 +6,7 @@ import NewProduct from '../NewProduct/NewProduct'
 import ProductCard from '../ProductCard/ProductCard'
 import './MainScreen.css'
 
-const MainScreen = ({ user, setUser }) => {
+const MainScreen = ({ user, setUser,logOut }) => {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([
@@ -23,9 +23,14 @@ const MainScreen = ({ user, setUser }) => {
 
   //cierre de sesion
   const handleLogout = () => {
-    setUser(null);
+    logOut()
     navigate("/login");
+    setUser(null);
+    
   };
+  const handleProfile = () => {
+    // Lógica para mostrar el perfil del usuario
+    alert(`Perfil de ${currentUser}`);}
 
   //agregar producto (admin y sysadmin)
   const handleAddProduct = (newProduct) => {
@@ -33,10 +38,6 @@ const MainScreen = ({ user, setUser }) => {
     setProducts([...products, productWhithId]);
   }
 
-  //si es sysadmin puede cambiar el rol de los demas
-  const handleRoleChange = (e) => {
-    setUser({ ...user, role: e.target.value });
-  };
 
   //menu segun el rol
   const navItems = [
@@ -45,7 +46,7 @@ const MainScreen = ({ user, setUser }) => {
     </li>
   ];
 
-  if (user.role === "customer") {
+  if (user.role === "customer" || user.role === "admin" || user.role === "sysadmin") {
     navItems.push(
       <li className="nav-item" key="apply">
         <a className="nav-link" href="#">Solicitar alquiler</a>
@@ -73,10 +74,10 @@ const MainScreen = ({ user, setUser }) => {
   }
 
   return (
-    <div className="container-fluid">
-      <header className="d-flex justify-content-between align-items-center p-3 bg-primary text-light">
+    <div className="container-fluid ">
+      <header> 
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container-fluid">
+          <div className="container-fluid ">
             <h1 className="navbar-brand text-primary">AlquiMaq S.R.L</h1>
             <button
               className="navbar-toggler"
@@ -97,21 +98,7 @@ const MainScreen = ({ user, setUser }) => {
           </div>
         </nav>
         <div className="d-flex align-items-center">
-          {currentRole === "sysadmin" && (
-            <div className="me-3">
-              <label htmlFor="roleSelect" className="me-2">Cambiar rol:</label>
-              <select
-                id="roleSelect"
-                className="form-select form-select-sm"
-                value={user.role}
-                onChange={handleRoleChange}
-              >
-                <option value="customer">Cliente</option>
-                <option value="admin">Administrador</option>
-                <option value="sysadmin">Super Administrador</option>
-              </select>
-            </div>
-          )}
+          <button className="btn btn-primary me-2" onClick={handleProfile}>{currentUser}</button>
           <button className="btn btn-danger" onClick={handleLogout}>Cerrar sesión</button>
         </div>
       </header>
@@ -129,9 +116,9 @@ const MainScreen = ({ user, setUser }) => {
           />
         )}
 
-        <div className="row">
+        <div className="row g-3">
           {products.map(product => (
-            <div className="col-md-4 mb-3" key={product.id}>
+            <div className="col-12 col-sm-6 col-md-4 mb-3" key={product.id}>
               <ProductCard
                 title={product.title}
                 description={product.description}
@@ -144,10 +131,10 @@ const MainScreen = ({ user, setUser }) => {
           }
         </div>
       </main>
-
-      <footer className="text-center p-3 bg-secondary text-light">
+      <footer className="text-center p-3 bg-secondary text-light vw-100">
         <p>© 2025 AlquiMaq S.R.L. Todos los derechos reservados.</p>
       </footer>
+
     </div>
   );
 };
