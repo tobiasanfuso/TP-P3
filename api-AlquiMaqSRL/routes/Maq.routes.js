@@ -1,6 +1,6 @@
-import { Router, Router } from "express";
+import { Router} from "express";
 
-const Router = Router();
+const router = Router();
 
 router.get("/Maq", (req, res) => {
     const { id } = req.params;
@@ -20,3 +20,5 @@ router.delete("/Maq", (req, res) => {
     const { id } = req.params;
     res.send("BORRAR MAQUINA con id; ${id}");
 });
+
+export default router;
