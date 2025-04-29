@@ -1,5 +1,6 @@
 import { Router} from "express";
 import {Users} from "../Models/Users.js";
+import { sequelize } from "../src/db.js";
 
 const router = Router();
 
@@ -21,3 +22,5 @@ router.POST("/users", async (req, res) => {
     }
 }
 );
+
+export default router;

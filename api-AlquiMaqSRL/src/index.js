@@ -1,17 +1,22 @@
 import express from 'express';
 import { PORT } from './config.js';
-// import maqroutes from "../routes/Maq.routes.js"
-
+import { sequelize } from './db.js';
+import router from '../routes/Users_routes.js';
 
 const app = express();
+app.use(express.json());
+
+app.use(userRoutes);
+
+sequelize.authenticate()
+    .then(() => {
+        console.log("Base de datos conectada correctamente");
+        app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`))})
+    .catch((error) => {
+        console.error("Error al conectar a la base de datos:", error);
+    })
 
 app.listen(PORT);
-// app.use(maqroutes);
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    next();
-})
+
 
 console.log (`prueba server listening on port ${PORT}`)

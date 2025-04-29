@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-export const sequelize = new Sequelize({
+export const sequelize = new Sequelize("Alquimaq","root",{
     dialect: 'mysql',
     host: "localhost",
     
