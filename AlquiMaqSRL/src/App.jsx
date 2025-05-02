@@ -5,6 +5,7 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import FormLogin from './components/auth/FormLogin'
+import FormRegister from './components/auth/FormRegister';
 import MainScreen from './components/dashboard/MainSceen'
 import NotFound from './components/dashboard/NotFound';
 
@@ -28,14 +29,15 @@ function App() {
     setLoggedIn(false);
     setUser(null);
   }
+  
 
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Navigate to='/login' />} />
-          <Route path='login' element={<FormLogin onLogin={handleLogIn} setUser={setUser} />} />
-  
+          <Route path='/login' element={<FormLogin onLogin={handleLogIn} setUser={setUser} />} />
+          <Route path='/register' element={<FormRegister/>}/>
     
           <Route element={<ProtectedRoute isSignedIn={loggedIn} />}>
             <Route path='/main' element={<MainScreen user={user} setUser={setUser} logOut={handleLogOut} />} />

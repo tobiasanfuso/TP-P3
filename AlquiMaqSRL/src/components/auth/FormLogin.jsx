@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Form, Button, Row, Col, FormGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useState,useRef } from 'react';
+import { useState, useRef } from 'react';
 import './FormLogin.css';
 
 
@@ -14,8 +14,8 @@ const FormLogin = ({ setUser, onLogin }) => {
   const passwordRef = useRef(null)
 
   const [errors, setErrors] = useState({
-    userName:false,
-    password:false
+    userName: false,
+    password: false
   })
 
 
@@ -44,8 +44,8 @@ const FormLogin = ({ setUser, onLogin }) => {
       passwordRef.current.focus()
       return
     }
-    setErrors({userName: false, password: false})
-    
+    setErrors({ userName: false, password: false })
+
     //logica de roles
     let role = "customer";
     if (userName.toLowerCase() === "admin") {
@@ -60,8 +60,8 @@ const FormLogin = ({ setUser, onLogin }) => {
   }
 
 
-      return (
-  <Card className="mt-5 mx-3 p-3 px-5 shadow form-card display-flex flex-column align-items-center">
+  return (
+    <Card className="mt-5 mx-3 p-3 px-5 shadow form-card display-flex flex-column align-items-center">
       <Card.Body>
         <Row className="mb-2">
           <h5>¡Bienvenidos a AlquiMaq S.R.L!</h5>
@@ -76,32 +76,32 @@ const FormLogin = ({ setUser, onLogin }) => {
               placeholder="Ingresar usuario"
               onChange={handleUserChange}
               value={userName} />
-              <p className="text-danger mt-2">{errors.userName && "El campo usuario es obligatorio"}</p>
+            <p className="text-danger mt-2">{errors.userName && "El campo usuario es obligatorio"}</p>
           </FormGroup>
           <FormGroup className="mb-4">
             <Form.Control
-            className={errors.password && "border border-danger"}
+              className={errors.password && "border border-danger"}
               type="password"
               required
               ref={passwordRef}
               placeholder="Ingresar contraseña"
               onChange={handlePasswordChange}
               value={password}
-              />
-              <p className="text-danger mt-2">{errors.password && "La contraseña es incorrecta"}</p>
+            />
+            <p className="text-danger mt-2">{errors.password && "La contraseña es incorrecta"}</p>
           </FormGroup>
-          <Row>
-            <Col />
-            <Col md={6} className="d-flex justify-content-end">
-              <Button variant="secondary" type="submit">
-                Iniciar sesión
-              </Button>
-            </Col>
-          </Row>
+          <div className="d-flex justify-content-between mt-3 gap-2">
+            <Button variant="outline-secondary" onClick={() => navigate("/register")}>
+              Registrarse
+            </Button>
+            <Button variant="secondary" type="submit">
+              Iniciar sesión
+            </Button>
+          </div>
         </Form>
       </Card.Body>
     </Card>
-              
+
   )
 }
 
