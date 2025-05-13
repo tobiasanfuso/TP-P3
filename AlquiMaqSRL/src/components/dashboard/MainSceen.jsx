@@ -43,10 +43,6 @@ const MainScreen = ({ user, setUser,logOut }) => {
     setProducts([...products, productWhithId]);
   }
 
-  const handleselectproduct = () => {
-    const 
-
-  }
 
   //menu segun el rol
   const navItems = [
