@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import NewProduct from '../NewProduct/NewProduct'
 import ProductCard from '../ProductCard/ProductCard'
 import './MainScreen.css'
-import ProductModal from '../ProductModal/ProductModal';
+import ProductModal from '../ProductCard/ProductModal';
 
 const MainScreen = ({ user, setUser,logOut }) => {
   const navigate = useNavigate();
