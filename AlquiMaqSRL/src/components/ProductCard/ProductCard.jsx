@@ -1,6 +1,7 @@
 import React from 'react'
 
-const ProductCard = ({ title, description, image, onDetails }) => {
+const ProductCard = ({ title, description, image, onDetails, onRent }) => {
+
     return (
         <div className='card mb-3'>
             <img
@@ -12,7 +13,7 @@ const ProductCard = ({ title, description, image, onDetails }) => {
                 <h5 className='card-title'>{title}</h5>
                 <p className='card-text'>{description}</p>
                 <button className='btn btn-sm btn-primary p-2 m-3' onClick={onDetails}>+ Detalles</button>
-                <button className='btn btn-lg btn-success p-3 mt-1 mb-0' onClick={onDetails}>Alquilar</button>
+                <button className='btn btn-lg btn-success p-3 mt-1 mb-0' onClick={onRent}>Alquilar</button>
             </div>
         </div>
     )

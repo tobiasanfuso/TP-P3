@@ -6,6 +6,8 @@ import NewProduct from '../NewProduct/NewProduct'
 import ProductCard from '../ProductCard/ProductCard'
 import './MainScreen.css'
 import ProductModal from '../ProductCard/ProductModal';
+import RentalModal from '../ProductCard/RentalModal';
+
 
 const MainScreen = ({ user, setUser,logOut }) => {
   const navigate = useNavigate();
@@ -20,6 +22,8 @@ const MainScreen = ({ user, setUser,logOut }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [rentalModalProduct, setRentalModalProduct] = useState(null);
+
 
 
   const currentRole = user.role;
@@ -129,6 +133,7 @@ const MainScreen = ({ user, setUser,logOut }) => {
                 description={product.description}
                 image={product.image}
                 onDetails={() => setSelectedProduct(product)}
+                onRent={() => setRentalModalProduct(product)}
               />
             </div>
           )
@@ -140,7 +145,10 @@ const MainScreen = ({ user, setUser,logOut }) => {
   product={selectedProduct}
   onClose={() => setSelectedProduct(null)}
 />
-
+<RentalModal
+  product={rentalModalProduct}
+  onClose={() => setRentalModalProduct(null)}
+/>
       <footer className="text-center p-3 bg-secondary text-light vw-100">
         <p>© 2025 AlquiMaq S.R.L. Todos los derechos reservados.</p>
       </footer>
