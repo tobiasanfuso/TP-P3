@@ -5,23 +5,14 @@ import { useNavigate } from 'react-router-dom'
 import NewProduct from '../NewProduct/NewProduct'
 import ProductCard from '../ProductCard/ProductCard'
 import './MainScreen.css'
-<<<<<<< Updated upstream
-=======
-import ProductModal from '../ProductModal/ProductModal';
->>>>>>> Stashed changes
+import ProductModal from '../ProductCard/ProductModal';
+import RentalModal from '../ProductCard/RentalModal';
+
 
 const MainScreen = ({ user, setUser,logOut }) => {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([
-<<<<<<< Updated upstream
-    { id: 1, title: "Agricola 1", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
-    { id: 2, title: "Agricola 2", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
-    { id: 3, title: "Agricola 3", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://placeholder.pics/svg/400x250/FFDEAA-FFA2A2" },
-  ])
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-=======
     { id: 1, title: "Martillo", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://imgs.search.brave.com/AnxguX9a4sEPITLiMWj7O5hPBn4xZmXXrr0eJtgGu68/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jbXMu/Z3J1cG9mZXJyZXBh/dC5uZXQvYXNzZXRz/L2ltZy9wcm9kdWN0/b3MvSE0xODEyXzEu/d2VicA" },
     { id: 2, title: "Vibropisonador", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://imgs.search.brave.com/pI6_3UPtgqKnZ4CVHZ3owowSbPeY9-jszT3o-EqoNzU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZGlyZWN0aW5kdXN0/cnkuZXMvaW1hZ2Vz/X2RpL3Bob3RvLW1n/LzQxMTU2LTE3ODE1/OTI3LmpwZw" },
     { id: 3, title: "Amoladora", description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.", image: "https://imgs.search.brave.com/LnLVvUVGB7EyvEbCt-mhiN2d4C9i8Y3dncmrbnaOi0g/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9kMjho/aTkzZ3I2OTdvbC5j/bG91ZGZyb250Lm5l/dC8xYWIzMjc0NS0y/NjBiLWNjODQvaW1n/L1Byb2R1Y3RvLzI4/Lzk1NjRQQ1YtMS02/Mjk5M2IyZDg2Yzkx/LmpwZWc" },
@@ -31,8 +22,9 @@ const MainScreen = ({ user, setUser,logOut }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [rentalModalProduct, setRentalModalProduct] = useState(null);
 
->>>>>>> Stashed changes
+
 
   const currentRole = user.role;
   const currentUser = user.name;
@@ -55,13 +47,6 @@ const MainScreen = ({ user, setUser,logOut }) => {
     setProducts([...products, productWhithId]);
   }
 
-<<<<<<< Updated upstream
-=======
-  const handleselectproduct = () => {
-    const 
-
-  }
->>>>>>> Stashed changes
 
   //menu segun el rol
   const navItems = [
@@ -147,11 +132,8 @@ const MainScreen = ({ user, setUser,logOut }) => {
                 title={product.title}
                 description={product.description}
                 image={product.image}
-<<<<<<< Updated upstream
-                onDetails={() => alert(`Detalles de ${product.title}`)}
-=======
                 onDetails={() => setSelectedProduct(product)}
->>>>>>> Stashed changes
+                onRent={() => setRentalModalProduct(product)}
               />
             </div>
           )
@@ -159,14 +141,14 @@ const MainScreen = ({ user, setUser,logOut }) => {
           }
         </div>
       </main>
-<<<<<<< Updated upstream
-=======
       <ProductModal
   product={selectedProduct}
   onClose={() => setSelectedProduct(null)}
 />
-
->>>>>>> Stashed changes
+<RentalModal
+  product={rentalModalProduct}
+  onClose={() => setRentalModalProduct(null)}
+/>
       <footer className="text-center p-3 bg-secondary text-light vw-100">
         <p>© 2025 AlquiMaq S.R.L. Todos los derechos reservados.</p>
       </footer>
