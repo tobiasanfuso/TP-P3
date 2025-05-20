@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 
+
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+
 
 import FormLogin from './components/auth/FormLogin'
 import FormRegister from './components/auth/FormRegister';

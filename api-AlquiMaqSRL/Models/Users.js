@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../src/db.js";
+import { sequelize } from "../config/db.js";
 
 export const Users = sequelize.define("Users", {
     id: {
@@ -7,7 +7,7 @@ export const Users = sequelize.define("Users", {
         primaryKey: true,
         autoIncrement: true
     },
-    userName: {
+    username: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
@@ -18,7 +18,8 @@ export const Users = sequelize.define("Users", {
         unique: true
     },
     role: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM("customer","admin","sysadmin"),
+        defaultValue: "customer",
         allowNull: false
         
     },
