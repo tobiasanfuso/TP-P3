@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer, toast,Zoom } from 'react-toastify';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
 
 export const FormRegister = () => {
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    //const [role, setRole] = useState("customer");
     const [errors, setErrors] = useState({ userName: "", password: "", email: "" });
 
-
+    const navigate = useNavigate()
 
     const handleUserChange = (e) => {
         setUserName(e.target.value);
@@ -21,18 +21,15 @@ export const FormRegister = () => {
         setPassword(e.target.value);
         setErrors({ ...errors, password: "" });
     };
+
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
         setErrors({ ...errors, email: "" });
-    }
-    // const handleRoleChange = (e) => {
-    //     setRole(e.target.value);
-    // };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        //validacion
         let validationErrors = { userName: "", password: "", email: "" };
         if (!username.length) {
             validationErrors.userName = "El campo usuario es obligatorio";
@@ -48,20 +45,17 @@ export const FormRegister = () => {
             return;
         }
 
-
-        //envio al backend con fetch
         try {
             const response = await fetch("http://localhost:5000/api/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username, email, password, })
+                body: JSON.stringify({ username, email, password })
             });
             const data = await response.json();
 
             if (response.ok) {
-                toast.success();
                 toast.success("Usuario registrado exitosamente", {
                     position: "top-right",
                     autoClose: 2500,
@@ -73,18 +67,18 @@ export const FormRegister = () => {
                     theme: "colored",
                     transition: Zoom,
                 });
+
+                setTimeout(() => {
+                    navigate("/login");
+                }, 2500);
             } else {
                 toast.error(data.message || "Error al registrar");
             }
         } catch (error) {
             console.log("Error al registrar", error);
             toast.error("Intenta nuevamente");
-        };
+        }
     };
-
-
-
-
 
     return (
         <Card className="mt-5 mx-3 p-3 px-5 shadow form-card display-flex flex-column align-items-center">
@@ -134,24 +128,16 @@ export const FormRegister = () => {
                             </Button>
                         </Col>
                     </Row>
+                    <div className="text-center mt-3">
+                        <span>¿Ya tenés cuenta?</span>{" "}
+                        <Button type='button' variant="secondary" className='p-1' onClick={() => navigate("/login")}>
+                            Login
+                        </Button>
+                    </div>
                 </Form>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={2500}
-                    hideProgressBar
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="colored"
-                    transition={Zoom}
-                />
+
             </Card.Body>
         </Card>
-
-
     );
 };
 

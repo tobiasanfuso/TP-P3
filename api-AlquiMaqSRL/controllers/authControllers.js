@@ -42,20 +42,20 @@ const SECRET = process.env.JWT_SECRET;
 //login
 
 export const login = async (req, res) => {
-    const {email, password} = req.body;
+    const {username, password} = req.body;
 
     try{
         //buscar usuario por email
-        const user = await Users.findOne({where: {email}});
+        const user = await Users.findOne({where: {username}});
 
         if(!user){
-            return res.status(400).json({message: 'Email o contraseña incorrectos'});
+            return res.status(400).json({message: 'Usuario o contraseña incorrectos'});
         }
 
         //comparar contraseñas 
         const isMatch = await bcrypt.compare(password,user.password);
         if(!isMatch){
-            return res.status(400).json({message: 'Email o contraseña incorrectos'});
+            return res.status(400).json({message: 'Usuario o contraseña incorrectos'});
         }
 
         //generar token

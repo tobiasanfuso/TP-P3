@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-
+import { ToastContainer, Zoom } from 'react-toastify';
 
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -48,6 +48,19 @@ function App() {
           <Route path='/*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer
+                    position="top-right"
+                    autoClose={2500}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="colored"
+                    transition={Zoom}
+                />
     </div>
   );
 }

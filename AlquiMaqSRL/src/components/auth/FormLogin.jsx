@@ -1,22 +1,20 @@
 import React from 'react';
 import { Card, Form, Button, Row, Col, FormGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import './FormLogin.css';
+import 'react-toastify/dist/ReactToastify.css'
+import { toast,Zoom} from 'react-toastify';
 
 
 
 const FormLogin = ({ setUser, onLogin }) => {
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
-  const navigate = useNavigate();
-  const userRef = useRef(null)
-  const passwordRef = useRef(null)
+  const [errors, setErrors] = useState({ userName: false, password: false })
 
-  const [errors, setErrors] = useState({
-    userName: false,
-    password: false
-  })
+  const navigate = useNavigate();
+
 
 
   const handleUserChange = (e) => {
@@ -28,36 +26,71 @@ const FormLogin = ({ setUser, onLogin }) => {
     setErrors({ ...errors, password: false })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  const newErrors = {
+    userName: userName.trim() === "",
+    password: password.trim().length < 7,
+  };
 
-    //logica de validacion
+  setErrors(newErrors);
 
-    if (!userRef.current.value.length) {
-      setErrors({ ...errors, userName: true })
-      userRef.current.focus()
-      return
-    }
-    else if (!passwordRef.current.value.length || password.length < 7) {
-      setErrors({ ...errors, password: true })
-      passwordRef.current.focus()
-      return
-    }
-    setErrors({ userName: false, password: false })
-
-    //logica de roles
-    let role = "customer";
-    if (userName.toLowerCase() === "admin") {
-      role = "admin";
-    } else if (userName.toLowerCase() === "sysadmin") {
-      role = "sysadmin";
-    }
-
-    setUser({ name: userName, role });
-    onLogin();
-    navigate("/main");
+  if (newErrors.userName || newErrors.password) {
+    if (newErrors.userName) toast.error("El campo usuario es obligatorio");
+  if (newErrors.password) toast.error("La contraseña debe tener al menos 7 caracteres");
+  return;
   }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: userName, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+  const message = data?.message || `Error ${response.status}: ${response.statusText}`;
+  toast.error(message, {
+    position: "top-right",
+    autoClose: 2500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+    transition: Zoom,
+  });
+  return;
+}
+
+    if (data.user && data.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userRole", data.user.role);
+
+      setUser({ name: data.user.username, role: data.user.role });
+
+      onLogin();
+      navigate("/main");
+    } else {
+      toast.error("Datos de usuario inválidos");
+    }
+  } catch (error) {
+    console.error("Error al loguearse", error);
+    toast.error("Error al loguearse", {
+      position: "top-right",
+      autoClose: 2500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+      transition: Zoom,
+    });
+  }
+}
 
 
   return (
@@ -72,31 +105,32 @@ const FormLogin = ({ setUser, onLogin }) => {
               type="username"
               required
               className={errors.userName && "border border-danger"}
-              ref={userRef}
               placeholder="Ingresar usuario"
               onChange={handleUserChange}
               value={userName} />
-            <p className="text-danger mt-2">{errors.userName && "El campo usuario es obligatorio"}</p>
+            {/* <p className="text-danger mt-2">{errors.userName && "El campo usuario es obligatorio"}</p> */}
           </FormGroup>
           <FormGroup className="mb-4">
             <Form.Control
               className={errors.password && "border border-danger"}
               type="password"
               required
-              ref={passwordRef}
               placeholder="Ingresar contraseña"
               onChange={handlePasswordChange}
               value={password}
             />
-            <p className="text-danger mt-2">{errors.password && "La contraseña es incorrecta"}</p>
+            {/* <p className="text-danger mt-2">{errors.password && "La contraseña es incorrecta"}</p> */}
           </FormGroup>
-          <div className="d-flex justify-content-between mt-3 gap-2">
-            <Button variant="outline-secondary" onClick={() => navigate("/register")}>
+          <Button variant="secondary" type="submit">
+            Iniciar sesión
+          </Button>
+
+          <div className="text-center mt-3">
+            <span>¿No tenés cuenta?</span>{" "}
+            <Button variant="secondary" className='p-1' onClick={() => navigate("/register")}>
               Registrarse
             </Button>
-            <Button variant="secondary" type="submit">
-              Iniciar sesión
-            </Button>
+
           </div>
         </Form>
       </Card.Body>
