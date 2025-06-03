@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast,Zoom } from 'react-toastify';
 
 export const FormRegister = () => {
-    const [userName, setUserName] = useState("");
+    const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [role, setRole] = useState("customer");
+    //const [role, setRole] = useState("customer");
     const [errors, setErrors] = useState({ userName: "", password: "", email: "" });
 
 
 
     const handleUserChange = (e) => {
         setUserName(e.target.value);
-        setErrors({ ...errors, userName: "" });
+        setErrors({ ...errors, username: "" });
     };
 
     const handlePasswordChange = (e) => {
@@ -23,16 +25,16 @@ export const FormRegister = () => {
         setEmail(e.target.value);
         setErrors({ ...errors, email: "" });
     }
-    const handleRoleChange = (e) => {
-        setRole(e.target.value);
-    };
+    // const handleRoleChange = (e) => {
+    //     setRole(e.target.value);
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         //validacion
         let validationErrors = { userName: "", password: "", email: "" };
-        if (!userName.length) {
+        if (!username.length) {
             validationErrors.userName = "El campo usuario es obligatorio";
         }
         if (!password.length) {
@@ -49,23 +51,34 @@ export const FormRegister = () => {
 
         //envio al backend con fetch
         try {
-            const response = await fetch("http://localhost:8000/users", {
+            const response = await fetch("http://localhost:5000/api/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ userName, password, email, role })
+                body: JSON.stringify({ username, email, password, })
             });
             const data = await response.json();
 
-            if (response.ok && data.success) {
-                alert("Usuario registrado exitosamente");
+            if (response.ok) {
+                toast.success();
+                toast.success("Usuario registrado exitosamente", {
+                    position: "top-right",
+                    autoClose: 2500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Zoom,
+                });
             } else {
-                alert("Error al registrar usuario");
+                toast.error(data.message || "Error al registrar");
             }
         } catch (error) {
             console.log("Error al registrar", error);
-            alert("Intenta nuevamente");
+            toast.error("Intenta nuevamente");
         };
     };
 
@@ -97,7 +110,7 @@ export const FormRegister = () => {
                             required
                             placeholder="Ingrese nombre de usuario"
                             onChange={handleUserChange}
-                            value={userName}
+                            value={username}
                             className={errors.userName && "border border-danger"}
                         />
                         <p className="text-danger mt-2">{errors.userName}</p>
@@ -122,8 +135,23 @@ export const FormRegister = () => {
                         </Col>
                     </Row>
                 </Form>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={2500}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="colored"
+                    transition={Zoom}
+                />
             </Card.Body>
         </Card>
+
+
     );
 };
 
