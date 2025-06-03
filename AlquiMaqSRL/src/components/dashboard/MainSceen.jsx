@@ -23,6 +23,8 @@ const MainScreen = ({ user, setUser,logOut }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [rentalModalProduct, setRentalModalProduct] = useState(null);
+  const [rentalRequests, setRentalRequests] = useState([]);
+  const [viewingRequests, setViewingRequests] = useState(false);
 
 
 
@@ -40,6 +42,11 @@ const MainScreen = ({ user, setUser,logOut }) => {
   const handleProfile = () => {
     // Lógica para mostrar el perfil del usuario
     alert(`Perfil de ${currentUser}`);}
+
+    const handleRentalRequest = (request) => {
+      setRentalRequests([...rentalRequests, request]);
+    };
+    
 
   //agregar producto (admin y sysadmin)
   const handleAddProduct = (newProduct) => {
@@ -61,8 +68,10 @@ const MainScreen = ({ user, setUser,logOut }) => {
         <a className="nav-link" href="#">Solicitar alquiler</a>
       </li>,
       <li className="nav-item" key="my-applys">
-        <a className="nav-link" href="#">Mis solicitudes</a>
-      </li>
+      <button className="nav-link btn btn-link" onClick={() => setViewingRequests(true)}>
+        Mis solicitudes
+      </button>
+    </li>    
     );
   }
 
@@ -113,34 +122,53 @@ const MainScreen = ({ user, setUser,logOut }) => {
       </header>
 
       <main className="p-4">
-        <h2>Bienvenido {currentUser} a AlquiMaq S.R.L</h2>
-        <p>Esta es la pantalla principal del sistema.</p>
-        {(currentRole === "admin" || currentRole === "sysadmin") && (
-          <button className="btn btn-success mb-4" onClick={() => setIsModalOpen(true)}>Agregar Producto</button>
-        )}
-        {isModalOpen && (
-          <NewProduct
-            onSave={handleAddProduct}
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
+  {viewingRequests ? (
+    <>
+      <h3>Mis Solicitudes</h3>
+      <button className="btn btn-secondary mb-3" onClick={() => setViewingRequests(false)}>Volver</button>
+      {rentalRequests.length === 0 ? (
+        <p>No has realizado ninguna solicitud aún.</p>
+      ) : (
+        <ul className="list-group">
+          {rentalRequests.map((req, index) => (
+            <li className="list-group-item" key={index}>
+              <strong>{req.producto}</strong> - {req.nombre} {req.apellido} - {req.email} - {req.telefono}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  ) : (
+    <>
+      <h2>Bienvenido {currentUser} a AlquiMaq S.R.L</h2>
+      <p>Esta es la pantalla principal del sistema.</p>
+      {(currentRole === "admin" || currentRole === "sysadmin") && (
+        <button className="btn btn-success mb-4" onClick={() => setIsModalOpen(true)}>Agregar Producto</button>
+      )}
+      {isModalOpen && (
+        <NewProduct
+          onSave={handleAddProduct}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
 
-        <div className="row g-3">
-          {products.map(product => (
-            <div className="col-12 col-sm-6 col-md-4 mb-3" key={product.id}>
-              <ProductCard
-                title={product.title}
-                description={product.description}
-                image={product.image}
-                onDetails={() => setSelectedProduct(product)}
-                onRent={() => setRentalModalProduct(product)}
-              />
-            </div>
-          )
-          )
-          }
-        </div>
-      </main>
+      <div className="row g-3">
+        {products.map(product => (
+          <div className="col-12 col-sm-6 col-md-4 mb-3" key={product.id}>
+            <ProductCard
+              title={product.title}
+              description={product.description}
+              image={product.image}
+              onDetails={() => setSelectedProduct(product)}
+              onRent={() => setRentalModalProduct(product)}
+            />
+          </div>
+        ))}
+      </div>
+    </>
+  )}
+</main>
+
       <ProductModal
   product={selectedProduct}
   onClose={() => setSelectedProduct(null)}
@@ -148,7 +176,9 @@ const MainScreen = ({ user, setUser,logOut }) => {
 <RentalModal
   product={rentalModalProduct}
   onClose={() => setRentalModalProduct(null)}
+  onSubmit={handleRentalRequest}
 />
+
       <footer className="text-center p-3 bg-secondary text-light vw-100">
         <p>© 2025 AlquiMaq S.R.L. Todos los derechos reservados.</p>
       </footer>

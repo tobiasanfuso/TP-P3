@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-const RentalRequestModal = ({ product, onClose }) => {
+const RentalRequestModal = ({ product, onClose, onSubmit }) => {
+
 
 const [formData, setFormData] = useState({
     nombre: '',
@@ -17,7 +18,8 @@ const handleChange = (e) => {
 
 const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Solicitud enviada:", formData, "para el producto:", product.title);
+    const request = { ...formData, producto: product.title };
+    onSubmit(request);
     setSubmitted(true);
 };
 
