@@ -61,3 +61,30 @@ export const deleteUser = async(req,res) => {
         res.status(500).json({message: "error del server"});
     }
 }
+
+// Crear usuario (solo sysadmin desde el panel)
+export const createUser = async (req, res) => {
+    const { username, email, password, role = "customer" } = req.body;
+
+    try {
+        const userExists = await Users.findOne({ where: { username } });
+        const emailExists = await Users.findOne({ where: { email } });
+
+        if (userExists) return res.status(400).json({ message: "Nombre de usuario ya en uso" });
+        if (emailExists) return res.status(400).json({ message: "Email ya registrado" });
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await Users.create({
+            username,
+            email,
+            password: hashedPassword,
+            role
+        });
+
+        res.status(201).json({ message: "Usuario creado correctamente", user: newUser });
+    } catch (error) {
+        console.error("Error al crear usuario:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+};

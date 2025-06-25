@@ -86,10 +86,12 @@ const MainScreen = ({ user, setUser,logOut }) => {
   if (user.role === "sysadmin") {
     navItems.push(
       <li className="nav-item" key="admin-panel">
-        <a className="nav-link" href="#">Panel de control</a>
+        <button className="nav-link btn btn-link" onClick={() => navigate("/panel-de-control")}>
+          Panel de control
+        </button>
       </li>
     );
-  }
+  }  
 
   return (
     <div className="container-fluid ">
